@@ -1,4 +1,5 @@
 # Projet Système Syracuse
+
 > Ce projet consiste à optimiser la conjecture de syracuse le plus possible à l'aide de threads et/ou processus
 
 Table of Contents (up to date)
@@ -9,20 +10,36 @@ Table of Contents (up to date)
 - [Version 4 - Utilisation des processus](#version-4---utilisation-des-processus)
 
 # Version 1 - Itératif
+Code en C
+```C
+int syracuse(int n) {
+    while (n != 1) {
+        if (n%2 == 0) {
+            n=n/2;
+            cpt+=1;
+        } else {
+            n=3*n+1;
+            cpt+=1;
+        }
+    }
+}
+```
+Code en python
 ```python
 def syracuse():
     n=int(input ("entrez un nombre: "))
     compteur=1
     while (n!=1):
-    if n%2==0:
-        n=n/2
-        compteur=compteur+1
-    else:
-        n=3*n+1
-        compteur=compteur+1
+        if n%2 == 0:
+            n=n/2
+            compteur+=1
+        else:
+            n=3*n+1
+            compteur+=1
     print ("Nombre de valeurs:" , compteur)
 ```
 # Version 2 - Récursif
+Code en C
 ```C
 int syracuse(int n) {
     int cpt;
@@ -38,6 +55,19 @@ int syracuse(int n) {
         return cpt;
     }
 }
+```
+Code en python
+```python
+def syracuse(n):
+    if n%2 ==0:
+        n /= 2
+    else:
+        n = 3*n+1
+    if n != 1:
+        cpt+=1
+        syracuse(n)
+    else:
+        return cpt+1
 ```
 # Version 3 - Utilisation des threads
 
