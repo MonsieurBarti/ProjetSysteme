@@ -13,61 +13,59 @@ Table of Contents (up to date)
 Code en C
 ```C
 int syracuse(int n) {
+    int cpt = 1;
     while (n != 1) {
         if (n%2 == 0) {
             n=n/2;
-            cpt+=1;
+            cpt++;
         } else {
             n=3*n+1;
-            cpt+=1;
+            cpt++;
         }
     }
+    return cpt;
 }
 ```
 Code en python
 ```python
-def syracuse():
-    n=int(input ("entrez un nombre: "))
-    compteur=1
+def syracuse(n):
+    cpt=1
     while (n!=1):
-        if n%2 == 0:
+        if n%2==0:
             n=n/2
-            compteur+=1
+            cpt+=1
         else:
             n=3*n+1
-            compteur+=1
-    print ("Nombre de valeurs:" , compteur)
+            cpt+=1
+    print ("Nombre de valeurs:" , cpt)
 ```
 # Version 2 - Récursif
 Code en C
 ```C
-int syracuse(int n) {
-    int cpt;
+int syracuse(int n, int cpt) {
     if(n % 2 == 0) {
         n /= 2;
     } else {
         n = 3*n+1;
     }
     if(n != 1) {
-        cpt += 1;
-        syracuse(n);
+        syracuse(n, cpt+1);
     } else {
-        return cpt;
+        return cpt+1;
     }
 }
 ```
 Code en python
 ```python
-def syracuse(n):
-    if n%2 ==0:
+def syracuse(n, cpt):
+    if (n%2 == 0):
         n /= 2
     else:
         n = 3*n+1
-    if n != 1:
-        cpt+=1
-        syracuse(n)
+    if (n != 1):
+        syracuse(n, cpt+1)
     else:
-        return cpt+1
+        print("Nombre de valeurs: ", cpt+1)
 ```
 # Version 3 - Utilisation des threads
 
