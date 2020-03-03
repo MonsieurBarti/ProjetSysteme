@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int cpt = 0;
+
 int syracuse(int n) {
-    int cpt;
     if(n % 2 == 0) {
         n /= 2;
     } else {
@@ -12,13 +13,13 @@ int syracuse(int n) {
         cpt += 1;
         syracuse(n);
     } else {
-        return cpt;
+        return cpt+2;
     }
 }
 
 int main() {
     int n;
-    print('Entrez un nombre: ');
-    scanf('%d', &n);
-    print(syracuse(n));
+    printf("Entrez un nombre: ");
+    scanf("%d", &n);
+    printf("Nombre de calculs: %d \n", syracuse(n));
 }
