@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 int syracuse(int n) {
     int cpt;
     if(n % 2 == 0) {
