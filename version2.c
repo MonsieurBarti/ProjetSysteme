@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int cpt = 0;
+int cpt = 1;
 
 int syracuse(int n) {
     if(n % 2 == 0) {
@@ -13,7 +13,7 @@ int syracuse(int n) {
         cpt += 1;
         syracuse(n);
     } else {
-        return cpt+2;
+        return cpt+1;
     }
 }
 
