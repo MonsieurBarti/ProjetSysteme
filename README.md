@@ -10,7 +10,7 @@ Table of Contents (up to date)
 
 # Version 1 - Itératif
 ```python
-    def syracuse():
+def syracuse():
     n=int(input ("entrez un nombre: "))
     compteur=1
     while (n!=1):
