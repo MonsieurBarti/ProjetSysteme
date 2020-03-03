@@ -24,18 +24,18 @@ def syracuse():
 ```
 # Version 2 - Récursif
 ```C
-    int syracuse(int n) {
-        int cpt;
-        if(n % 2 == 0) {
-            n /= 2;
-        } else {
-            n = 3*n+1;
-        }
-        if(n != 1) {
-            cpt += 1;
-            syracuse(n);
-        } else {
-            return cpt;
+int syracuse(int n) {
+    int cpt;
+    if(n % 2 == 0) {
+        n /= 2;
+    } else {
+        n = 3*n+1;
+    }
+    if(n != 1) {
+        cpt += 1;
+        syracuse(n);
+    } else {
+        return cpt;
     }
 }
 ```
