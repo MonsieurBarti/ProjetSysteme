@@ -10,6 +10,7 @@ Table of Contents (up to date)
 - [Version 4 - Utilisation des processus](#version-4---utilisation-des-processus)
 - [Parties Personnelles - Arnaud](#parties-personnelles---arnaud)
 - [Parties Personnelles - Pierre](#parties-personnelles---pierre)
+- [Conclusion du projet](#conclusion-du-projet)
 
 # Version 1 - Itératif
 Code en C
@@ -70,6 +71,48 @@ def syracuse(n, cpt):
         print("Nombre de valeurs: ", cpt+1)
 ```
 # Version 3 - Utilisation des threads
+
+```C
+
+int main (void)
+{
+
+  tableau_profondeur=calloc(taille, sizeof(long));
+
+  long debut1;
+  long debut2;
+  long boucle=1;
+
+  pthread_t monThread1;
+  pthread_t monThread2;
+
+  while(boucle){
+
+    printf("Faire calcules ? (oui=1, non=0)");
+    scanf("%ld",&boucle);
+
+    if(boucle==1){
+
+      printf("Premier nombre de départ :");
+      scanf("%ld",&debut1);
+
+      printf("Deuxième nombre de départ :");
+      scanf("%ld",&debut2);
+
+      pthread_create (&monThread1, NULL, fonction_thread, (void*)&debut1);
+      pthread_create (&monThread2, NULL, fonction_thread, (void*)&debut2); /* Création des threads */
+
+      pthread_join (monThread1, NULL);
+      pthread_join (monThread2, NULL);/* Attente de la fin des threads */
+    }else{
+      boucle=0;
+    }
+  }
+  free(tableau_profondeur);
+  return 0;
+}
+
+```
 
 # Version 4 - Utilisation des processus
 
@@ -252,4 +295,9 @@ On envoie ensuite les données à la mémoire partagée en utilisant la fonction
 ```C
 sprintf(ptr, "%s", buffer);
 ```
-J'ai beaucoup aimé effectué ce projet et je pense que c'était très intéressant à faire. Cependant, peut être qu'un exemple plus concret avec une compléxité mathématique beaucoup plus élevée aurait été plus intéressant pour vraiment voir l'impact de l'optimisation apportée au code.
+
+# Conclusion du projet
+
+Nous avons beaucoup aimé effectuer ce projet et nous pensons que c'était très intéressant à faire. Cela nous a permis d'utiliser les compétences que nous avons appris pendant le DUT et notamment en cours de système d'exploitation. (IPC,thread, recursivité, ...)
+
+Cependant, peut être qu'un exemple plus concret avec une compléxité mathématique plus élevée aurait été plus intéressant pour voir l'impact de l'optimisation apportée au code. Pour le moment on ne distingue pas une grande différence entre le programme utilisant les threads, IPC, et récursif.  
