@@ -8,7 +8,8 @@ Table of Contents (up to date)
 - [Version 2 - Récursif](#version-2---r%c3%a9cursif)
 - [Version 3 - Utilisation des threads](#version-3---utilisation-des-threads)
 - [Version 4 - Utilisation des processus](#version-4---utilisation-des-processus)
-- [Parties Personnelles - Arnaud](#-Parties-Personnelles---Arnaud)
+- [Parties Personnelles - Arnaud](#parties-personnelles---arnaud)
+- [Parties Personnelles - Pierre](#parties-personnelles---pierre)
 
 # Version 1 - Itératif
 Code en C
@@ -79,7 +80,7 @@ En effet j'ai commencé par initialiser un tableau de 3000 cases. Mais si l'algo
 
 J'initialise un tableau avec calloc et si je me rends compte que j'ai besoin de plus de place alors j'augmente la taille avec realloc.
 
-J'ai décidé d'utiliser calloc au lieu de malloc, car je voulais pouvoir tester si j'avais deja remplis une case du tableau ou non. Si la valeur est à 0 alors cela signifie que je n'ai pas effectué se calcule.
+J'ai décidé d'utiliser calloc au lieu de malloc, car je voulais pouvoir tester si j'avais deja remplis une case du tableau ou non. Si la valeur est à 0 alors cela signifie que je n'ai pas effectué ce calcul.
 
 Voici un extrait du programme Allocation_dynamique.c :
 ```C
@@ -186,3 +187,69 @@ void* fonction_thread (void* arg)
 }
 
 ```
+
+# Parties Personnelles - Pierre
+De mon côté, je me suis penché sur les IPC et j'ai pour cela effectué quelques recherches pour déterminer ce qui pourrait m'aider à réaliser ce programme.
+
+J'ai donc commencé par créer un segment de mémoire partagée :
+```C
+shm_fd = shm_open("OS", O_CREAT | O_RDWR, 0666);
+```
+Une fois ce segment créé, j'ai testé qu'il n'y avait pas d'erreur liée à cette création.
+```C
+if (shm_fd == -1) {
+	printf("\tErreur liée au segment de mémoire partagée.\n");
+	exit(-1);
+}
+printf("\tLe segment de mémoire partagée est ouvert.\n");
+```
+Une fois ce segment créé, il me fallait un moyen pour que mes différents processus puissent y accéder. J'ai donc utiliser la fonction mmap qui permet d'accéder à ce segment.
+```C
+ptr = mmap(0,SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0);
+```
+Je vérifie ensuite que la fonction mmap n'a pas généré d'erreur.
+```C
+if (ptr == MAP_FAILED) {
+	printf("\terreur map du process enfant\n");
+	return -1;
+}
+```
+Dans le processus enfant, j'exécute ma fonction Collatz après avoir demandé à l'utilisateur quel nombre il souhaitait avoir.
+```C
+printf("Entrez un entier positif pour vérifier la conjecture de Collatz(Syracuse)\n");
+scanf("%llu", &number);
+Collatz(number);
+```
+Une fois la fonction exécutée, je passe au processus parent à qui j'applique le mmap de la même façon pour pouvoir lire les données du segment de mémoire partagée.
+
+Parlons maintenant de notre fonction Collatz que je vous mets ci-dessous :
+```C
+void Collatz(unsigned long long int n) {
+    char buffer [SIZE];
+    sprintf(buffer, "%llu", n);
+    sprintf(ptr, "%s", buffer);
+    ptr += strlen(buffer);
+    if (n == 1) {
+        return;
+    }
+    else {
+        sprintf(ptr, " ");
+        ptr++;
+        if (n%2 == 0)
+            n = n/2;
+        else
+            n = (3*n)+1;
+        Collatz(n);
+    }
+}
+```
+C'est une fonction récursive qui permet deux choses :
+- Elle calcule les éléments de la séquence de Syracuse impliquée.
+- Elle les ajoute à la mémoire partagée pour que tous les processus puissent y accéder après un mapping.
+
+Cela est possible grâce à l'utilisation du buffer local qui contient les valeurs dans un tableau de caractères.
+On envoie ensuite les données à la mémoire partagée en utilisant la fonction sprintf
+```C
+sprintf(ptr, "%s", buffer);
+```
+J'ai beaucoup aimé effectué ce projet et je pense que c'était très intéressant à faire. Cependant, peut être qu'un exemple plus concret avec une compléxité mathématique beaucoup plus élevée aurait été plus intéressant pour vraiment voir l'impact de l'optimisation apportée au code.
