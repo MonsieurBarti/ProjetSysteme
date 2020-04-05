@@ -12,6 +12,8 @@ Table of Contents (up to date)
 - [Parties Personnelles - Pierre](#parties-personnelles---pierre)
 - [Conclusion du projet](#conclusion-du-projet)
 
+Tous les extrait de programme presenté ci-dessous sont à retrouver en intégralité dans la partie "code" du github.
+
 # Version 1 - Itératif
 Code en C
 ```C
@@ -115,6 +117,48 @@ int main (void)
 ```
 
 # Version 4 - Utilisation des processus
+
+```C
+int ipc_collatz(){
+    unsigned long long int number = 0;
+    shm_fd = shm_open("OS", O_CREAT | O_RDWR, 0666);
+    if (shm_fd == -1) {
+        printf("Erreur liée au segment de mémoire partagée.\n");
+        exit(-1);
+    }
+    printf("Le segment de mémoire partagée est ouvert.\n");
+    ftruncate(shm_fd,SIZE);
+    
+    pid = fork();
+    if (pid < 0) {
+        perror("Erreur fork");
+    } else if (pid == 0) {
+        memoirepartagee = mmap(0,SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0);
+        if (memoirepartagee == MAP_FAILED) {
+            printf("erreur map du process enfant\n");
+            return -1;
+        }
+        printf("Entrez un entier positif pour vérifier la conjecture de Collatz(Syracuse)\n");
+        scanf("%llu", &number);
+        Collatz(number);
+    }  else {
+        wait(NULL);     
+        memoirepartagee = mmap(0,SIZE, PROT_READ, MAP_SHARED, shm_fd, 0);
+        if (memoirepartagee == MAP_FAILED) {
+            printf("erreur map process parent\n");
+            exit(-1);
+        }
+        printf("La suite permettant d'arriver à 1 pour le nombre %llu est:\n", number);
+        printf("%s\n",memoirepartagee);
+        if (shm_unlink("OS") == -1) {
+            printf("Erreur lors de la suppression de %s\n","OS");
+            exit(-1);   
+        }
+        printf("Segment de mémoire partagée supprimé\n");
+    }
+    return 0;
+}
+```
 
 # Parties Personnelles - Arnaud
 Le premier obstacle que j'ai rencontré, c'était la limitation par la mémoire. 
